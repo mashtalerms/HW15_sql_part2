@@ -12,6 +12,55 @@ select distinct * from(
    );
 
 
+create table outcome(
+    id integer primary key autoincrement,
+    subtype varchar(100),
+    `type` varchar(100),
+    `month` integer,
+    `year` integer
+);
+
+
+insert into outcome (subtype, `type`, `month`, `year`)
+select distinct animals.outcome_subtype,
+                animals.outcome_type,
+                animals.outcome_month,
+                animals.outcome_year
+from animals;
+
+
+create table colors(
+    id integer primary key autoincrement,
+    color varchar(100)
+);
+
+
+insert into colors(color)
+select distinct * from(
+    select distinct
+        color1 as color
+    from animals
+    union all
+    select distinct
+        color2 as color
+    from animals
+   );
+
+
+create table new_animals(
+    id integer primary key autoincrement,
+    age_upon_outcome varchar(100),
+    animal_id varchar(100),
+    animal_type varchar(100),
+    name varchar(100),
+    breed_id integer,
+    date_of_birth varchar(100),
+    outcome_id integer,
+    foreign key (outcome_id) references outcome(id),
+    foreign key (breed_id) references breeds(id)
+);
+
+
 create table animals_breeds(
     animals_id integer,
     breed_id integer,
@@ -24,23 +73,6 @@ select distinct new_animals.id, breeds.id
 from animals
 join breeds on breeds.breed = animals.breed
 join new_animals on new_animals.animal_id = animals.animal_id;
-
-
-create table colors(
-    id integer primary key autoincrement,
-    color varchar(100)
-);
-
-insert into colors(color)
-select distinct * from(
-    select distinct
-        color1 as color
-    from animals
-    union all
-    select distinct
-        color2 as color
-    from animals
-   );
 
 
 create table animals_colors(
@@ -62,37 +94,6 @@ from animals
 join colors on colors.color = animals.color2
 join new_animals on new_animals.animal_id = animals.animal_id
 ;
-
-
-create table outcome(
-    id integer primary key autoincrement,
-    subtype varchar(100),
-    `type` varchar(100),
-    `month` integer,
-    `year` integer
-);
-
-
-insert into outcome (subtype, `type`, `month`, `year`)
-select distinct animals.outcome_subtype,
-                animals.outcome_type,
-                animals.outcome_month,
-                animals.outcome_year
-from animals;
-
-
-create table new_animals(
-    id integer primary key autoincrement,
-    age_upon_outcome varchar(100),
-    animal_id varchar(100),
-    animal_type varchar(100),
-    name varchar(100),
-    breed_id integer,
-    date_of_birth varchar(100),
-    outcome_id integer,
-    foreign key (outcome_id) references outcome(id),
-    foreign key (breed_id) references breeds(id)
-);
 
 
 insert into new_animals (age_upon_outcome, animal_id, animal_type, name, date_of_birth,breed_id, outcome_id)

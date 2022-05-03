@@ -1,9 +1,5 @@
 import sqlite3
 
-"""
-Соединение с БД
-"""
-
 
 def get_connection_sql(sqlite_query):
     with sqlite3.connect("animal.db") as con:
